@@ -37,7 +37,7 @@ def make_gifs_sample(path, title):
         file = os.path.join(path, '%s_Edges2Shoes_Epoch_%03d.png' % (title, i+1))
         generated_images.append(imageio.imread(file))
 
-    imageio.mimsave(path + '{}_Results.gif'.format(title), generated_images, fps=5)
+    imageio.mimsave(path + '{}_Results_.gif'.format(title), generated_images, fps=5)
     print("{} Gif file is generated.".format(title))
 
 
@@ -49,7 +49,7 @@ def make_gifs_test(path, title):
         file = os.path.join(path, '%s_Edges2Shoes_Results_%03d.png' % (title, i+1))
         generated_images.append(imageio.imread(file))
 
-    imageio.mimsave(path + '{}_Results.gif'.format(title), generated_images, fps=5)
+    imageio.mimsave(path + '{}_Results_Test.gif'.format(title), generated_images, fps=5)
     print("{} Gif file is generated.".format(title))
 
 
