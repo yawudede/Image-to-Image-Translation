@@ -4,7 +4,7 @@ Image to Image Translation (GAN) using PyTorch
 ### 2. [DiscoGAN](https://arxiv.org/pdf/1703.05192.pdf)
 
 #### 1. Networks
-<img src = ./Results/DiscoGAN_Diagram.png>
+<img src = ./Results/DiscoGAN_Diagram.PNG>
 
 #### 2. Edges2Shoes Dataset [Download](https://people.eecs.berkeley.edu/~tinghuiz/projects/pix2pix/datasets/edges2shoes.tar.gz)
 
