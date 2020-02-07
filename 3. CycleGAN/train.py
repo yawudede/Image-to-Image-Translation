@@ -163,5 +163,5 @@ def train(batch_size, num_epochs):
 if __name__ == "__main__":
     torch.cuda.empty_cache()
     batch_size = 1
-    num_epochs = 100
+    num_epochs = 100 # Decrease to 40 if you don't have enough GPU resources.
     train(batch_size, num_epochs)
