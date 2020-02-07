@@ -1,9 +1,9 @@
 # Image-to-Image-Translation
 Image to Image Translation (GAN) using PyTorch
 
-### 1. Pix2Pix: [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/pdf/1611.07004.pdf)
+## 1. Pix2Pix: [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/pdf/1611.07004.pdf)
 
-### 2. DiscoGAN: [Learning to Discover Cross-Domain Relations with Generative Adversarial Networks](https://arxiv.org/pdf/1703.05192.pdf)
+## 2. DiscoGAN: [Learning to Discover Cross-Domain Relations with Generative Adversarial Networks](https://arxiv.org/pdf/1703.05192.pdf)
 
 #### 1. Networks
 <img src = ./Results/DiscoGAN_Diagram.PNG>
@@ -26,7 +26,7 @@ In the order of,
 #### 5. Training Loss over Epoch 40
 <img src = ./Results/DiscoGAN_Losses_Epoch_40.png>
 
-### 3. CycleGAN: [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/pdf/1703.10593.pdf)
+## 3. CycleGAN: [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/pdf/1703.10593.pdf)
 
 #### 1. Networks
 [Diagram Source](https://modelzoo.co/model/mnist-svhn-transfer)
