@@ -1,6 +1,9 @@
 # Image-to-Image-Translation
 Image to Image Translation (GAN) using PyTorch
 
+### 1. Pix2Pix: [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/pdf/1611.07004.pdf)
+#### 1. 
+
 ### 2. DiscoGAN: [Learning to Discover Cross-Domain Relations with Generative Adversarial Networks](https://arxiv.org/pdf/1703.05192.pdf)
 
 #### 1. Networks
@@ -27,10 +30,12 @@ In the order of,
 ### 3. CycleGAN: [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/pdf/1703.10593.pdf)
 
 #### 1. Networks
+<img src = ./Results/CycleGAN_Networks.png>
+[Image source](https://modelzoo.co/model/mnist-svhn-transfer)
 
 #### 2. Horse2Zebra Dataset [Download](https://people.eecs.berkeley.edu/~taesung_park/CycleGAN/datasets/horse2zebra.zip)
 
-#### 3. Sample Images during Training
+#### 3. Best Sample Image during Training
 In the order of,
 - real A   (Horse)
 - fake B   (Generated Zebra)
@@ -38,6 +43,10 @@ In the order of,
 - real B   (Zebra)
 - fake A   (Generated Horse)
 - fake BAB (Reconstructed Zebra)
-#### 4. Results (Inference After x Epochs)
+<img src = ./Results/CycleGAN_Horse2Zebra_Best_1.png>
 
-#### 5. Training Loss over Epoch x
+#### 4. Best Result (Inference After 100 Epochs)
+<img src = ./Results/CycleGAN_Horse2Zebra_Best_2.png>
+
+#### 5. Training Loss over Epoch 100
+<img src = ./Results/CycleGAN_Losses_Epoch_100.png>
