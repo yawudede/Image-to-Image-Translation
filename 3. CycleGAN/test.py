@@ -18,7 +18,7 @@ def test(batch_size):
     if not os.path.exists(results_path):
         os.mkdir(results_path)
 
-    testloader_horse, testloader_zebra = get_horse2zebra_loader(1, 'test')
+    testloader_horse, testloader_zebra = get_horse2zebra_loader(batch_size, 'test')
     total_batch = min(len(testloader_horse), len(testloader_zebra))
 
     G_A2B = Generator().to(device)
