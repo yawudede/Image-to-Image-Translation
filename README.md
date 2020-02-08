@@ -39,7 +39,7 @@ In the order of,
 <img src = ./Results/DiscoGAN_Results_Test.gif>
 
 #### 5. Training Loss over Epoch 40
-<img src = ./Results/DiscoGAN_Losses_Epoch_40.png>
+<img src = ./Results/DiscoGAN_Losses_Epoch_40_.png>
 
 ## 3. CycleGAN: [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/pdf/1703.10593.pdf)
 
