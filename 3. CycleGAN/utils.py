@@ -23,7 +23,7 @@ def plot_losses(discriminator_a_losses, discriminator_b_losses, generator_losses
     plt.title("CycleGAN Losses over Epoch {}".format(num_epochs))
     plt.plot(discriminator_a_losses, label='Discriminator A', alpha=0.5)
     plt.plot(discriminator_b_losses, label='Discriminator B', alpha=0.5)
-    plt.plot(generator_losses, label='Generator')
+    plt.plot(generator_losses, label='Generator', alpha=0.5)
     plt.legend(loc='best')
     plt.grid()
     plt.savefig(os.path.join(results_path, 'CycleGAN_Losses_Epoch_{}.png'.format(num_epochs)))
