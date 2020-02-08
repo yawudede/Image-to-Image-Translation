@@ -3,6 +3,20 @@ Image to Image Translation (GAN) using PyTorch
 
 ## 1. Pix2Pix: [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/pdf/1611.07004.pdf)
 
+#### 1. Networks
+#### 2. Facades Dataset [Download](https://people.eecs.berkeley.edu/~tinghuiz/projects/pix2pix/datasets/facades.tar.gz)
+#### 3. Sample Images during Training
+In the order, of,
+- Target Image
+- Input Image
+- Generated Image
+<img src = ./Results/Pix2Pix_Results_Sample.gif width=40%>
+
+#### 4. Results (Inference After 60 Epochs)
+<img src = ./Results/Pix2Pix_Results_Test.gif>
+
+#### 5. Training Loss over Epoch 60
+
 ## 2. DiscoGAN: [Learning to Discover Cross-Domain Relations with Generative Adversarial Networks](https://arxiv.org/pdf/1703.05192.pdf)
 
 #### 1. Networks
