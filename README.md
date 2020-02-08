@@ -16,6 +16,7 @@ In the order, of,
 <img src = ./Results/Pix2Pix_Results_Test.gif>
 
 #### 5. Training Loss over Epoch 60
+<img src = ./Results/Pix2Pix_Losses_Epoch_60.png>
 
 ## 2. DiscoGAN: [Learning to Discover Cross-Domain Relations with Generative Adversarial Networks](https://arxiv.org/pdf/1703.05192.pdf)
 
