@@ -108,6 +108,8 @@ def train(batch_size, num_epochs):
     torch.save(G.state_dict(), './data/results/Pix2Pix_Generator.pkl')
 
 if __name__ == '__main__':
+    torch.cuda.empty_cache()
+
     batch_size = 1
-    num_epochs = 100
+    num_epochs = 60
     train(batch_size, num_epochs)
