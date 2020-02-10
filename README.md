@@ -1,4 +1,5 @@
 # Image-to-Image-Translation
+Pix2Pix | DiscoGAN | CycleGAN | BicycleGAN
 
 ## 1. Pix2Pix: [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/pdf/1611.07004.pdf)
 
