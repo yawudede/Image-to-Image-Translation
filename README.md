@@ -64,3 +64,6 @@ In the order of,
 
 #### 5. Training Loss over Epoch 100
 <img src = ./Results/CycleGAN_Losses_Epoch_100.png>
+
+## 4. BicycleGAN: [Toward Multimodal Image-to-Image Translation](https://people.eecs.berkeley.edu/~pathak/papers/nips17.pdf)
+###### currently fixing codes... (based on https://github.com/eveningglow/BicycleGAN-pytorch)
