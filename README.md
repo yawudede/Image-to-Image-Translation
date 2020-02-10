@@ -1,5 +1,4 @@
 # Image-to-Image-Translation
-Image to Image Translation (GAN) using PyTorch
 
 ## 1. Pix2Pix: [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/pdf/1611.07004.pdf)
 
@@ -66,4 +65,4 @@ In the order of,
 <img src = ./Results/CycleGAN_Losses_Epoch_100.png>
 
 ## 4. BicycleGAN: [Toward Multimodal Image-to-Image Translation](https://people.eecs.berkeley.edu/~pathak/papers/nips17.pdf)
-###### currently fixing codes... (based on https://github.com/eveningglow/BicycleGAN-pytorch)
+currently fixing codes... 
