@@ -3,7 +3,9 @@
 ## 1. Pix2Pix: [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/pdf/1611.07004.pdf)
 
 #### 1. Networks
+
 #### 2. Facades Dataset [Download](https://people.eecs.berkeley.edu/~tinghuiz/projects/pix2pix/datasets/facades.tar.gz)
+
 #### 3. Sample Images during Training
 In the order, of,
 - Target Image
@@ -18,7 +20,6 @@ In the order, of,
 <img src = ./Results/Pix2Pix_Losses_Epoch_60.png>
 
 ## 2. DiscoGAN: [Learning to Discover Cross-Domain Relations with Generative Adversarial Networks](https://arxiv.org/pdf/1703.05192.pdf)
-
 #### 1. Networks
 <img src = ./Results/DiscoGAN_Diagram.PNG>
 
@@ -65,4 +66,7 @@ In the order of,
 <img src = ./Results/CycleGAN_Losses_Epoch_100.png>
 
 ## 4. BicycleGAN: [Toward Multimodal Image-to-Image Translation](https://people.eecs.berkeley.edu/~pathak/papers/nips17.pdf)
-currently fixing codes... 
+#### 1. Networks
+#### 2. Edges2Handbags Dataset [Download](https://people.eecs.berkeley.edu/~tinghuiz/projects/pix2pix/datasets/edges2handbags.tar.gz)
+
+<br> currently fixing codes... 
