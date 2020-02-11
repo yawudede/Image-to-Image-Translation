@@ -8,7 +8,7 @@ Pix2Pix | DiscoGAN | CycleGAN | BicycleGAN
 #### 2. Facades Dataset [Download](https://people.eecs.berkeley.edu/~tinghuiz/projects/pix2pix/datasets/facades.tar.gz)
 
 #### 3. Sample Images during Training
-In the order, of,
+In the order of,
 - Target Image
 - Input Image
 - Generated Image
@@ -40,7 +40,7 @@ In the order of,
 <img src = ./Results/DiscoGAN_Results_Test.gif>
 
 #### 5. Training Loss over Epoch 40
-<img src = ./Results/DiscoGAN_Losses_Epoch_40_.png>
+<img src = ./Results/DiscoGAN_Losses_Epoch_40.png>
 
 ## 3. CycleGAN: [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/pdf/1703.10593.pdf)
 
@@ -68,6 +68,21 @@ In the order of,
 
 ## 4. BicycleGAN: [Toward Multimodal Image-to-Image Translation](https://people.eecs.berkeley.edu/~pathak/papers/nips17.pdf)
 #### 1. Networks
+<img src = ./Results/BicycleGAN_Networks.png>
+
 #### 2. Edges2Handbags Dataset [Download](https://people.eecs.berkeley.edu/~tinghuiz/projects/pix2pix/datasets/edges2handbags.tar.gz)
 
-<br> currently fixing codes... 
+#### 3. Best Sample Image During Training
+Due to computational limitation, the sample Image is from epoch 1. 
+In the order of,
+- sketch A
+- 5 Generated Fake Images from sketch A
+- sketch B
+- 5 Generated Fake Images from sketch B
+<img src = ./Results/BicycleGAN_Edges2Handbags_Sample.png>
+
+#### 4. Best Results (Inference After x Epochs)
+- to be added
+
+#### 5. Training Loss over Epoch x
+- to be added
