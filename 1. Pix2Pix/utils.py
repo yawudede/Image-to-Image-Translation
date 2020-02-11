@@ -5,7 +5,6 @@ import torch
 from torch.autograd import Variable
 from torchvision.utils import save_image
 
-
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
@@ -18,8 +17,8 @@ def weights_init(m):
         m.bias.data.fill_(0)
 
 
-def plot_losses(discriminator_losses, generator_losses, num_epochs, results_path):
-    plt.figure(figsize=(10, 5))
+def plot_losses(discriminator_losses, generator_losses, num_epochs, path):
+    plt.figure(figsize = (10, 5))
     plt.xlabel("Iterations")
     plt.ylabel("Losses")
     plt.title("Pix2Pix Losses over Epoch {}".format(num_epochs))
@@ -27,10 +26,10 @@ def plot_losses(discriminator_losses, generator_losses, num_epochs, results_path
     plt.plot(generator_losses, label='Generator', alpha=0.5)
     plt.legend(loc='best')
     plt.grid()
-    plt.savefig(os.path.join(results_path, 'Pix2Pix_Losses_Epoch_{}.png'.format(num_epochs)))
+    plt.savefig(os.path.join(path, 'Pix2Pix_Losses_Epoch_{}.png'.format(num_epochs)))
 
 
-def sample_images(data_loader, epoch, generator):
+def sample_images(data_loader, epoch, generator, path):
     batch = next(iter(data_loader))
     input = Variable(batch['A'].type(torch.FloatTensor).to(device))
     target = Variable((batch['B']).type(torch.FloatTensor).to(device))
@@ -39,10 +38,11 @@ def sample_images(data_loader, epoch, generator):
     generated = generator(input)
 
     result = torch.cat((target, input, generated), 0)
-    save_image(result, './data/results/Pix2Pix_Facades_Epoch_%03d.png' % (epoch + 1), nrow=3, normalize=True)
+    result = ((result.data + 1) / 2).clamp(0, 1)
+    save_image(result, os.path.join(path, 'Pix2Pix_Facades_Epoch_%03d.png' % (epoch + 1)), nrow=3, normalize=True)
 
 
-def make_gifs_sample(path, title):
+def make_gifs_train(title, path):
     images = os.listdir(path)
     generated_images = []
 
@@ -50,11 +50,11 @@ def make_gifs_sample(path, title):
         file = os.path.join(path, '%s_Facades_Epoch_%03d.png' % (title, i+1))
         generated_images.append(imageio.imread(file))
 
-    imageio.mimsave(path + '{}_Results_Sample.gif'.format(title), generated_images, fps=2)
-    print("{} Gif file is generated.".format(title))
+    imageio.mimsave(path + '{}_Train_Results.gif'.format(title), generated_images, fps=2)
+    print("{} gif file is generated.".format(title))
 
 
-def make_gifs_test(path, title):
+def make_gifs_test(title, path):
     images = os.listdir(path)
     generated_images = []
 
@@ -62,5 +62,5 @@ def make_gifs_test(path, title):
         file = os.path.join(path, '%s_Results_%03d.png' % (title, i + 1))
         generated_images.append(imageio.imread(file))
 
-    imageio.mimsave(path + '{}_Results_Test.gif'.format(title), generated_images, fps=2)
-    print("{} Gif file is generated.".format(title))
+    imageio.mimsave(path + '{}_Test_Results.gif'.format(title), generated_images, fps=2)
+    print("{} gif file is generated.".format(title))

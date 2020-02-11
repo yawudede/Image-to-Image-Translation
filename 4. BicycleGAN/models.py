@@ -2,6 +2,113 @@ import torch
 import torch.nn as nn
 
 
+class Discriminator(nn.Module):
+    def __init__(self):
+        super(Discriminator, self).__init__()
+
+        self.in_channels = 3
+        self.ndf = 64
+        self.out_channels = 1
+
+        # Discriminator having last patch of (1, 14, 14)
+        # (batch_size, 3, 128, 128) -> (batch_size, 1, 14, 14)
+        self.main_1 = nn.Sequential(
+            nn.AvgPool2d(kernel_size=3, stride=2, padding=0, count_include_pad=False),
+
+            nn.Conv2d(self.in_channels, self.ndf, kernel_size=4, stride=2, padding=1),
+            nn.LeakyReLU(0.2, inplace=True),
+
+            nn.Conv2d(self.ndf, self.ndf*2, 4, 2, 1),
+            nn.InstanceNorm2d(self.ndf*2, affine=True),
+            nn.LeakyReLU(0.2, inplace=True),
+
+            nn.Conv2d(self.ndf*2, self.ndf*4, 4, 1, 1),
+            nn.InstanceNorm2d(self.ndf*4, affine=True),
+            nn.LeakyReLU(0.2, inplace=True),
+
+            nn.Conv2d(self.ndf*4, self.out_channels, 4, 1, 1)
+        )
+
+        # Discriminator having last patch of (1, 30, 30)
+        # (batch_size, 3, 128, 128) -> (batch_size, 1, 30, 30)
+        self.main_2 = nn.Sequential(
+            nn.Conv2d(self.in_channels, self.ndf, kernel_size=4, stride=2, padding=1),
+            nn.LeakyReLU(0.2, inplace=True),
+
+            nn.Conv2d(self.ndf, self.ndf * 2, 4, 2, 1),
+            nn.InstanceNorm2d(self.ndf * 2, affine=True),
+            nn.LeakyReLU(0.2, inplace=True),
+
+            nn.Conv2d(self.ndf * 2, self.ndf * 4, 4, 1, 1),
+            nn.InstanceNorm2d(self.ndf * 4, affine=True),
+            nn.LeakyReLU(0.2, inplace=True),
+
+            nn.Conv2d(self.ndf * 4, self.out_channels, 4, 1, 1)
+        )
+
+    def forward(self, x):
+        out_1 = self.main_1(x)
+        out_2 = self.main_2(x)
+        return out_1, out_2
+
+
+class ResBlock(nn.Module):
+    def __init__(self, in_dim, out_dim):
+        super(ResBlock, self).__init__()
+
+        self.main = nn.Sequential(
+            nn.InstanceNorm2d(in_dim, affine=True),
+            nn.LeakyReLU(0.2),
+
+            nn.Conv2d(in_dim, in_dim, kernel_size=3, stride=1, padding=1),
+            nn.InstanceNorm2d(in_dim, affine=True),
+            nn.LeakyReLU(0.2),
+
+            nn.Conv2d(in_dim, out_dim, kernel_size=3, stride=1, padding=1),
+            nn.AvgPool2d(kernel_size=2, stride=2, padding=0)
+        )
+
+        self.short_cut = nn.Sequential(
+            nn.AvgPool2d(kernel_size=2, stride=2, padding=0),
+            nn.Conv2d(in_dim, out_dim, kernel_size=1, stride=1, padding=0)
+        )
+
+    def forward(self, x):
+        out = self.main(x) + self.short_cut(x)
+        return out
+
+
+class Encoder(nn.Module):
+    def __init__(self, z_dim=8):
+        super(Encoder, self).__init__()
+
+        self.in_channels = 3
+        self.nef = 64
+
+        self.main = nn.Sequential(                               # (batch_size, 3, 128, 128)
+            nn.Conv2d(self.in_channels, self.nef, 4, 2, 1),      # (batch_size, 64, 64, 64)
+
+            ResBlock(self.nef, self.nef*2),                      # (batch_size, 128, 32, 32)
+            ResBlock(self.nef*2, self.nef*3),                    # (batch_size, 192, 16, 16)
+            ResBlock(self.nef*3, self.nef*4),                    # (batch_size, 256, 8, 8)
+
+            nn.LeakyReLU(0.2),
+            nn.AvgPool2d(kernel_size=8, stride=8, padding=0)     # (batch_size, 256)
+        )
+
+        self.mu = nn.Linear(self.nef*4, z_dim)                   # (256, 8)
+        self.log_var = nn.Linear(self.nef*4, z_dim)              # (256, 8)
+
+    def forward(self, x):
+        x = self.main(x)
+        x = x.view(x.size(0), -1)
+
+        mu = self.mu(x)
+        log_variance = self.log_var(x)
+
+        return mu, log_variance
+
+
 class Generator(nn.Module):
     def __init__(self, z_dim=8):
         super(Generator, self).__init__()
@@ -116,110 +223,3 @@ class Generator(nn.Module):
         up_7 = self.up_layer_7(torch.cat([up_6, down_1], dim=1))
 
         return up_7
-
-
-class Discriminator(nn.Module):
-    def __init__(self):
-        super(Discriminator, self).__init__()
-
-        self.in_channels = 3
-        self.ndf = 64
-        self.out_channels = 1
-
-        # Discriminator having last patch of (1, 14, 14)
-        # (batch_size, 3, 128, 128) -> (batch_size, 1, 14, 14)
-        self.main_1 = nn.Sequential(
-            nn.AvgPool2d(kernel_size=3, stride=2, padding=0, count_include_pad=False),
-
-            nn.Conv2d(self.in_channels, self.ndf, kernel_size=4, stride=2, padding=1),
-            nn.LeakyReLU(0.2, inplace=True),
-
-            nn.Conv2d(self.ndf, self.ndf*2, 4, 2, 1),
-            nn.InstanceNorm2d(self.ndf*2, affine=True),
-            nn.LeakyReLU(0.2, inplace=True),
-
-            nn.Conv2d(self.ndf*2, self.ndf*4, 4, 1, 1),
-            nn.InstanceNorm2d(self.ndf*4, affine=True),
-            nn.LeakyReLU(0.2, inplace=True),
-
-            nn.Conv2d(self.ndf*4, self.out_channels, 4, 1, 1)
-        )
-
-        # Discriminator having last patch of (1, 30, 30)
-        # (batch_size, 3, 128, 128) -> (batch_size, 1, 30, 30)
-        self.main_2 = nn.Sequential(
-            nn.Conv2d(self.in_channels, self.ndf, kernel_size=4, stride=2, padding=1),
-            nn.LeakyReLU(0.2, inplace=True),
-
-            nn.Conv2d(self.ndf, self.ndf * 2, 4, 2, 1),
-            nn.InstanceNorm2d(self.ndf * 2, affine=True),
-            nn.LeakyReLU(0.2, inplace=True),
-
-            nn.Conv2d(self.ndf * 2, self.ndf * 4, 4, 1, 1),
-            nn.InstanceNorm2d(self.ndf * 4, affine=True),
-            nn.LeakyReLU(0.2, inplace=True),
-
-            nn.Conv2d(self.ndf * 4, self.out_channels, 4, 1, 1)
-        )
-
-    def forward(self, x):
-        out_1 = self.main_1(x)
-        out_2 = self.main_2(x)
-        return out_1, out_2
-
-
-class ResBlock(nn.Module):
-    def __init__(self, in_dim, out_dim):
-        super(ResBlock, self).__init__()
-
-        self.main = nn.Sequential(
-            nn.InstanceNorm2d(in_dim, affine=True),
-            nn.LeakyReLU(0.2),
-
-            nn.Conv2d(in_dim, in_dim, kernel_size=3, stride=1, padding=1),
-            nn.InstanceNorm2d(in_dim, affine=True),
-            nn.LeakyReLU(0.2),
-
-            nn.Conv2d(in_dim, out_dim, kernel_size=3, stride=1, padding=1),
-            nn.AvgPool2d(kernel_size=2, stride=2, padding=0)
-        )
-
-        self.short_cut = nn.Sequential(
-            nn.AvgPool2d(kernel_size=2, stride=2, padding=0),
-            nn.Conv2d(in_dim, out_dim, kernel_size=1, stride=1, padding=0)
-        )
-
-    def forward(self, x):
-        out = self.main(x) + self.short_cut(x)
-        return out
-
-
-class Encoder(nn.Module):
-    def __init__(self, z_dim=8):
-        super(Encoder, self).__init__()
-
-        self.in_channels = 3
-        self.nef = 64
-
-        self.main = nn.Sequential(                               # (batch_size, 3, 128, 128)
-            nn.Conv2d(self.in_channels, self.nef, 4, 2, 1),      # (batch_size, 64, 64, 64)
-
-            ResBlock(self.nef, self.nef*2),                      # (batch_size, 128, 32, 32)
-            ResBlock(self.nef*2, self.nef*3),                    # (batch_size, 192, 16, 16)
-            ResBlock(self.nef*3, self.nef*4),                    # (batch_size, 256, 8, 8)
-
-            nn.LeakyReLU(0.2),
-            nn.AvgPool2d(kernel_size=8, stride=8, padding=0)     # (batch_size, 256)
-        )
-
-        self.mu = nn.Linear(self.nef*4, z_dim)                   # (256, 8)
-        self.log_var = nn.Linear(self.nef*4, z_dim)              # (256, 8)
-
-    def forward(self, x):
-        x = self.main(x)
-        x = x.view(x.size(0), -1)
-
-        mu = self.mu(x)
-        log_variance = self.log_var(x)
-
-        return mu, log_variance

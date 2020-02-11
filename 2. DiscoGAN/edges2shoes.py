@@ -37,7 +37,7 @@ class Edges2Shoes(Dataset):
         return len(self.images)
 
 
-def get_edges2shoes_loader(batch_size, purpose):
+def get_edges2shoes_loader(purpose, batch_size):
     if purpose == 'train':
         train_set = Edges2Shoes('./data/edges2shoes/', 'train')
         train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)

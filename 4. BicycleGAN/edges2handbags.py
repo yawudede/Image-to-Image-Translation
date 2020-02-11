@@ -3,8 +3,6 @@ import torchvision.transforms as transforms
 import os
 from PIL import Image
 
-"""https://arxiv.org/pdf/1711.11586.pdf"""
-
 
 class Edges2Handbags(Dataset):
     def __init__(self, root, purpose):
@@ -35,7 +33,7 @@ class Edges2Handbags(Dataset):
         return len(self.images)
 
 
-def get_edges2handbags(purpose, batch_size):
+def get_edges2handbags_loader(purpose, batch_size):
     if purpose == 'train':
         train_set = Edges2Handbags('./data/edges2handbags/', 'train')
         train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, drop_last=True)

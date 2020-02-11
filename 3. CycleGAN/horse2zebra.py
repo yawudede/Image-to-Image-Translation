@@ -27,7 +27,7 @@ class Horse2Zebra(Dataset):
         return len(self.images)
 
 
-def get_horse2zebra_loader(batch_size, purpose):
+def get_horse2zebra_loader(purpose, batch_size):
     # A is horse, B is zebra
     if purpose == 'train':
         train_horse = Horse2Zebra('./data/horse2zebra/', 'trainA')
