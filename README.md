@@ -73,8 +73,8 @@ In the order of,
 #### 2. Edges2Handbags Dataset [Download](https://people.eecs.berkeley.edu/~tinghuiz/projects/pix2pix/datasets/edges2handbags.tar.gz)
 
 #### 3. Best Sample Image During Training
-Due to computational limitation, the sample Image is from epoch 1. 
-In the order of,
+##### Due to computational limitation, the sample Image is from epoch 1. 
+<br> In the order of,
 - sketch A
 - 5 Generated Fake Images from sketch A
 - sketch B
