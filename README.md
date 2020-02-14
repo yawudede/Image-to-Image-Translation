@@ -73,16 +73,14 @@ In the order of,
 #### 2. Edges2Handbags Dataset [Download](https://people.eecs.berkeley.edu/~tinghuiz/projects/pix2pix/datasets/edges2handbags.tar.gz)
 
 #### 3. Best Sample Image During Training
-##### Due to computational limitation, the sample Image is from epoch 1. 
 <br> In the order of,
 - sketch A
 - 5 Generated Fake Images from sketch A
 - sketch B
 - 5 Generated Fake Images from sketch B
+<img src = ./Results/BicycleGAN_Train_Results.gif>
+
+#### 4. Best Results (Inference After 1 Epochs)
 <img src = ./Results/BicycleGAN_Edges2Handbags_Sample.png>
 
-#### 4. Best Results (Inference After x Epochs)
-- to be added
-
-#### 5. Training Loss over Epoch x
-- to be added
+#### 5. Training Loss over Epoch 1
