@@ -1,7 +1,7 @@
 ## Pix2Pix : [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/abs/1611.07004)
 
 ### 0. Inference Result (After 200 Epochs)
-<img src = './1. Pix2Pix/results/inference/Pix2Pix_Results_001.png'>
+<img src = './results/inference/Pix2Pix_Results_001.png'>
 
 ### 1. Run the Codes
 #### 1) Download Datasets
