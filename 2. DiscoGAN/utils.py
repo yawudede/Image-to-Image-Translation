@@ -1,39 +1,110 @@
-from matplotlib import pyplot as plt
 import os
 import imageio
+from matplotlib import pyplot as plt
+
 import torch
-from torch.autograd import Variable
+from torch.nn import init
 from torchvision.utils import save_image
+
+from config import *
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
-def weights_init(m):
+def make_dirs(path):
+    """Make Directory If not Exists"""
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+
+def init_weights_normal(m):
+    """Normal Weight Initialization"""
     classname = m.__class__.__name__
     if classname.find('Conv') != -1:
-        m.weight.data.normal_(0.0, 0.02)
-    elif classname.find('BatchNorm') != -1:
-        m.weight.data.normal_(1.0, 0.02)
-        m.bias.data.fill_(0)
+        init.normal(m.weight.data, 0.0, 0.02)
+    elif classname.find('Linear') != -1:
+        init.normal(m.weight.data, 0.0, 0.02)
 
-def sample_images(data_loader, epoch, generator_1, generator_2, path):
 
-    images = next(iter(data_loader))
-    real_A = images['A'].to(device)
+def init_weights_xavier(m):
+    """Xavier Weight Initialization"""
+    classname = m.__class__.__name__
+    if classname.find('Conv') != -1:
+        init.xavier_normal(m.weight.data, gain=0.02)
+    elif classname.find('Linear') != -1:
+        init.xavier_normal(m.weight.data, gain=0.02)
+
+
+def init_weights_kaiming(m):
+    """Kaiming He Weight Initialization"""
+    classname = m.__class__.__name__
+    if classname.find('Conv') != -1:
+        init.kaiming_normal_(m.weight.data, a=0, mode='fan_in')
+    elif classname.find('Linear') != -1:
+        init.kaiming_normal_(m.weight.data, a=0, mode='fan_in')
+
+
+def get_lr_scheduler(optimizer):
+    """Learning Rate Scheduler"""
+    if config.lr_scheduler == 'step':
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=config.lr_decay_every, gamma=config.lr_decay_rate)
+    elif config.lr_scheduler == 'plateau':
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.2, threshold=0.01, patience=5)
+    elif config.lr_scheduler == 'cosine':
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=config.num_epochs, eta_min=0)
+    else:
+        raise NotImplementedError
+    return scheduler
+
+
+def set_requires_grad(networks, requires_grad=False):
+    """Prevent a Network from Updating"""
+    for network in networks:
+        for param in network.parameters():
+            param.requires_grad = requires_grad
+
+
+def feature_loss(criterion, real_features, fake_features):
+    """Feature Loss"""
+    losses = 0
+    for real_feature, fake_feature in zip(real_features, fake_features):
+        l2_loss = (real_feature.mean(0) - fake_feature.mean(0)) ** 2
+        labels = torch.ones(l2_loss.size()).to(device)
+        loss = criterion(l2_loss, labels)
+        losses += loss
+    return losses
+
+
+def denorm(x):
+    """De-normalization"""
+    out = (x+1) / 2
+    return out.clamp(0, 1)
+
+
+def sample_images(data_loader, generator_1, generator_2, epoch, path):
+    """Save Sample Images for Every Epoch"""
+    real_A, real_B = next(iter(data_loader))
+
+    real_A = real_A.to(device)
+    real_B = real_B.to(device)
+
     fake_B = generator_1(real_A)
-    fake_ABA = generator_2(fake_B)
-    real_B = images['B'].to(device)
     fake_A = generator_2(real_B)
+
+    fake_ABA = generator_2(fake_B)
     fake_BAB = generator_1(fake_A)
 
-    result = torch.cat((real_A, fake_A, fake_BAB, real_B, fake_B, fake_ABA), 0)
-    result = ((result.data + 1) / 2).clamp(0, 1)
-    save_image(result, os.path.join(path, 'DiscoGAN_Edges2Shoes_Epoch_%03d.png' % (epoch + 1)),
-               nrow=8, normalize=True)
+    images = [real_A, fake_B, fake_ABA, real_B, fake_A, fake_BAB]
+
+    result = torch.cat(images, dim=0)
+    save_image(denorm(result.data),
+               os.path.join(path, 'DiscoGAN_Edges2Shoes_Epoch_%03d.png' % (epoch + 1)),
+               nrow=8)
 
 
 def plot_losses(discriminator_losses, generator_losses, num_epochs, path):
-    plt.figure(figsize = (10, 5))
+    """Plot Losses After Training"""
+    plt.figure(figsize=(10, 5))
     plt.xlabel("Iterations")
     plt.ylabel("Losses")
     plt.title("DiscoGAN Losses over Epoch {}".format(num_epochs))
@@ -45,6 +116,7 @@ def plot_losses(discriminator_losses, generator_losses, num_epochs, path):
 
 
 def make_gifs_train(title, path):
+    """Make a GIF file After Train"""
     images = os.listdir(path)
     generated_images = []
 
@@ -57,6 +129,7 @@ def make_gifs_train(title, path):
 
 
 def make_gifs_test(title, path):
+    """Make a GIF file After Inference"""
     images = os.listdir(path)
     generated_images = []
 
@@ -66,13 +139,3 @@ def make_gifs_test(title, path):
 
     imageio.mimsave(path + '{}_Test_Results.gif'.format(title), generated_images, fps=2)
     print("{} gif file is generated.".format(title))
-
-
-def loss_feature(real_features, fake_features, criterion):
-    losses = 0
-    for real_feature, fake_feature in zip(real_features, fake_features):
-        l2_loss = (real_feature.mean(0) - fake_feature.mean(0)) ** 2
-        labels = Variable(torch.ones(l2_loss.size())).to(device)
-        loss = criterion(l2_loss, labels)
-        losses += loss
-    return losses

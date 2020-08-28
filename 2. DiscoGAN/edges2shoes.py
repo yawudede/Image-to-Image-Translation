@@ -1,43 +1,45 @@
-import glob
 import os
+from glob import glob
 from PIL import Image
+
 import torchvision.transforms as transforms
 from torch.utils.data import Dataset, DataLoader
 
+from config import *
 
 class Edges2Shoes(Dataset):
-    def __init__(self, root, purpose='train'):
+    """Edges2Shoes Dataset"""
+    def __init__(self, image_dir, purpose):
 
-        self.files = sorted(glob.glob(os.path.join(root, purpose) + '/*.*'))
+        self.image_dir = image_dir
+        self.purpose = purpose
+        self.images = [x for x in sorted(glob(os.path.join(self.image_dir, self.purpose) + '/*.*'))]
+
         self.transform = transforms.Compose([
-            transforms.Resize((64, 128)),
+            transforms.Resize(config.crop_size),
             transforms.ToTensor(),
             transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
         ])
 
-        self.root = root
-        self.purpose = purpose
-        self.root = os.path.join(self.root, self.purpose)
-        self.images = list(map(lambda x: os.path.join(self.root, x), os.listdir(self.root)))
-
     def __getitem__(self, index):
 
-        image = Image.open(self.images[index]).convert("RGB")
-        image = self.transform(image)
+        image = Image.open(self.images[index])
+        width, height = image.size
 
-        w_total = image.size(2)
-        w = int(w_total / 2)
+        image_A = image.crop((width/2, 0, width, height))
+        image_B = image.crop((0, 0, width / 2, height))
 
-        image_A = image[:, :64, :64]
-        image_B = image[:, :64, w:w + 64]
+        image_A = self.transform(image_A)
+        image_B = self.transform(image_B)
 
-        return {'A': image_A, 'B': image_B}
+        return (image_A, image_B)
 
     def __len__(self):
         return len(self.images)
 
 
 def get_edges2shoes_loader(purpose, batch_size):
+    """Edges2Shoes Data Loader"""
     if purpose == 'train':
         train_set = Edges2Shoes('./data/edges2shoes/', 'train')
         train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)

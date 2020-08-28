@@ -1,18 +1,22 @@
 import os
-import random
-import glob
+from glob import glob
 from PIL import Image
 from torch.utils.data import Dataset, DataLoader
-import torchvision.transforms as transforms
+from torchvision import transforms
+
+from config import *
 
 
 class Facades(Dataset):
+    """Facades Dataset"""
     def __init__(self, image_dir, purpose):
+
         self.image_dir = image_dir
         self.purpose = purpose
-        self.images = sorted(glob.glob(os.path.join(self.image_dir, self.purpose) + '/*.*'))
+        self.images = [x for x in sorted(glob(os.path.join(self.image_dir, self.purpose) + '/*.*'))]
+
         self.transform = transforms.Compose([
-            transforms.Resize(256, Image.BICUBIC),
+            transforms.Resize(config.crop_size, Image.BICUBIC),
             transforms.ToTensor(),
             transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
         ])
@@ -27,14 +31,14 @@ class Facades(Dataset):
         image_A = self.transform(image_A)
         image_B = self.transform(image_B)
 
-        images = {'A': image_A, 'B': image_B}
-        return images
+        return (image_A, image_B)
 
     def __len__(self):
         return len(self.images)
 
 
 def get_facades_loader(purpose, batch_size):
+    """Facades Data Loader"""
     if purpose == 'train':
         train_set = Facades('./data/facades/', 'train')
         train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, drop_last=True)

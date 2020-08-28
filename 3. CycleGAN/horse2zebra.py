@@ -1,17 +1,20 @@
-from torch.utils.data import Dataset, DataLoader
-import torchvision.transforms as transforms
 import os
 from PIL import Image
 
+import torchvision.transforms as transforms
+from torch.utils.data import Dataset, DataLoader
+
+from config import *
+
 
 class Horse2Zebra(Dataset):
+    """Horses2Zebra Dataset"""
     def __init__(self, image_path, sort):
         self.path = os.path.join(image_path, sort)
         self.images = [x for x in sorted(os.listdir(self.path))]
 
-        # resize and transform
         self.transform = transforms.Compose([
-            transforms.Resize(256),
+            transforms.Resize(config.crop_size),
             transforms.ToTensor(),
             transforms.Normalize(mean=(0.5, 0.5, 0.5),
                                  std=(0.5, 0.5, 0.5))
@@ -28,7 +31,7 @@ class Horse2Zebra(Dataset):
 
 
 def get_horse2zebra_loader(purpose, batch_size):
-    # A is horse, B is zebra
+    """Horses2Zebra Data Loader"""
     if purpose == 'train':
         train_horse = Horse2Zebra('./data/horse2zebra/', 'trainA')
         train_zebra = Horse2Zebra('./data/horse2zebra/', 'trainB')

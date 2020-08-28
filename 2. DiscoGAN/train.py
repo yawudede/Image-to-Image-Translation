@@ -1,161 +1,201 @@
 import os
-import torch
-import torch.nn as nn
-from torch.autograd import Variable
+import numpy as np
 from itertools import chain
 
-from models import *
-from edges2shoes import *
-from utils import *
+import torch
+import torch.nn as nn
+import torch.backends.cudnn as cudnn
+from torch.autograd import Variable
 
+from config import *
+from edges2shoes import get_edges2shoes_loader
+from models import Discriminator, Generator
+from utils import make_dirs, get_lr_scheduler, feature_loss, sample_images, plot_losses, make_gifs_train
+
+
+# Reproducibility #
+cudnn.deterministic = True
+cudnn.benchmark = False
+
+# Device Configuration #
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
-def train(batch_size, num_epochs):
+def train():
 
-    # Results Path #
-    results_path = './data/results/'
-    if not os.path.exists(results_path):
-        os.mkdir(results_path)
+    # Fix Seed for Reproducibility #
+    torch.manual_seed(9)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(9)
+
+    # Samples, Weights and Results Path #
+    paths = [config.samples_path, config.weights_path, config.plots_path]
+    paths = [make_dirs(path) for path in paths]
 
     # Prepare Data Loader #
-    train_loader = get_edges2shoes_loader('train', batch_size)
-    val_loader = get_edges2shoes_loader('val', 8)
+    train_loader = get_edges2shoes_loader('train', config.batch_size)
+    val_loader = get_edges2shoes_loader('val', config.val_batch_size)
     total_batch = len(train_loader)
 
-    # Networks #
-    D_A = Discriminator().to(device)
-    D_B = Discriminator().to(device)
+    # Prepare Networks #
     G_A2B = Generator().to(device)
     G_B2A = Generator().to(device)
+    D_A = Discriminator().to(device)
+    D_B = Discriminator().to(device)
 
-    networks = [D_A, D_B, G_A2B, G_B2A]
-
-    for network in networks:
-        network.apply(weights_init)
-
-    # Criterion #
-    criterion_GAN = nn.BCELoss()
+    # Loss Function #
+    criterion_Adversarial = nn.BCELoss()
     criterion_Recon = nn.MSELoss()
     criterion_Feature = nn.HingeEmbeddingLoss()
 
-    losses_D, losses_G = [], []
-
     # Optimizers #
-    optim_D = torch.optim.Adam(chain(D_A.parameters(), D_B.parameters()), lr=2e-4, betas=(0.5, 0.999),
-                               weight_decay=0.00001)
+    G_optim = torch.optim.Adam(chain(G_A2B.parameters(), G_B2A.parameters()), config.lr, betas=(0.5, 0.999), weight_decay=0.00001)
+    D_optim = torch.optim.Adam(chain(D_A.parameters(), D_B.parameters()), config.lr, betas=(0.5, 0.999), weight_decay=0.00001)
 
-    optim_G = torch.optim.Adam(chain(G_A2B.parameters(), G_B2A.parameters()), lr=2e-4, betas=(0.5, 0.999),
-                               weight_decay=0.00001)
+    D_optim_scheduler = get_lr_scheduler(D_optim)
+    G_optim_scheduler = get_lr_scheduler(G_optim)
+
+    # Lists #
+    D_losses, G_losses = [], []
+
+    # Constants #
+    iters = 0
 
     # Training #
-    print("Training DiscoGAN started with batch size of {} and total batch of {}.".format(batch_size, total_batch))
-    for epoch in range(num_epochs):
-        for i, sample in enumerate(train_loader):
+    print("Training DiscoGAN started with total epoch of {}.".format(config.num_epochs))
+
+    for epoch in range(config.num_epochs):
+
+        for i, (real_A, real_B) in enumerate(train_loader):
 
             # Data Preparation #
-            real_A = sample['A']
-            real_B = sample['B']
+            real_A = real_A.to(device)
+            real_B = real_B.to(device)
 
-            real_A = Variable(real_A).to(device)
-            real_B = Variable(real_B).to(device)
-
-            # Initialize #
-            D_A.zero_grad()
-            D_B.zero_grad()
+            # Initialize Models #
             G_A2B.zero_grad()
             G_B2A.zero_grad()
+            D_A.zero_grad()
+            D_B.zero_grad()
 
-            ### Foward Pass ###
+            # Initialize Optimizers #
+            D_optim.zero_grad()
+            G_optim.zero_grad()
+
+            ################
+            # Forward Data #
+            ################
+
             fake_B = G_A2B(real_A)
             fake_A = G_B2A(real_B)
 
-            real_out_A, real_features_A = D_A(real_A)
-            fake_out_A, fake_features_A = D_A(fake_B)
+            prob_real_A, A_real_features = D_A(real_A)
+            prob_fake_A, A_fake_features = D_A(fake_A)
 
-            real_out_B, real_features_B = D_B(real_B)
-            fake_out_B, fake_features_B = D_B(fake_A)
+            prob_real_B, B_real_features = D_B(real_B)
+            prob_fake_B, B_fake_features = D_B(fake_B)
 
+            #######################
+            # Train Discriminator #
+            #######################
+
+            # Discriminator A #
+            real_labels = Variable(torch.ones(prob_real_A.size()), requires_grad=False).to(device)
+            D_real_loss_A = criterion_Adversarial(prob_real_A, real_labels)
+
+            fake_labels = Variable(torch.zeros(prob_fake_A.size()), requires_grad=False).to(device)
+            D_fake_loss_A = criterion_Adversarial(prob_fake_A, fake_labels)
+
+            D_loss_A = (D_real_loss_A + D_fake_loss_A).mean()
+
+            # Discriminator B #
+            real_labels = Variable(torch.ones(prob_real_B.size()), requires_grad=False).to(device)
+            D_real_loss_B = criterion_Adversarial(prob_real_B, real_labels)
+
+            fake_labels = Variable(torch.zeros(prob_fake_B.size()), requires_grad=False).to(device)
+            D_fake_loss_B = criterion_Adversarial(prob_fake_B, fake_labels)
+
+            D_loss_B = (D_real_loss_B + D_fake_loss_B).mean()
+
+            # Calculate Total Discriminator Loss #
+            D_loss = D_loss_A + D_loss_B
+
+            ###################
+            # Train Generator #
+            ###################
+
+            # Adversarial Loss #
+            real_labels = Variable(torch.ones(prob_real_A.size()), requires_grad=False).to(device)
+            G_adv_loss_A = criterion_Adversarial(prob_fake_A, real_labels)
+
+            real_labels = Variable(torch.ones(prob_real_B.size()), requires_grad=False).to(device)
+            G_adv_loss_B = criterion_Adversarial(prob_fake_B, real_labels)
+
+            # Feature Loss #
+            G_feature_loss_A = feature_loss(criterion_Feature, A_real_features, A_fake_features)
+            G_feature_loss_B = feature_loss(criterion_Feature, B_real_features, B_fake_features)
+
+            # Reconstruction Loss #
             fake_ABA = G_B2A(fake_B)
             fake_BAB = G_A2B(fake_A)
 
-            # Labels #
-            real_labels = torch.FloatTensor(real_out_A.size()).fill_(1.0)
-            real_labels = Variable(real_labels, requires_grad=False).to(device)
+            G_recon_loss_A = criterion_Recon(fake_ABA, real_A)
+            G_recon_loss_B = criterion_Recon(fake_BAB, real_B)
 
-            fake_labels = torch.FloatTensor(fake_out_A.size()).fill_(0.0)
-            fake_labels = Variable(fake_labels, requires_grad=False).to(device)
+            if iters < config.decay_gan_loss:
+                rate = config.starting_rate
+            else:
+                print("Now the rate is changed to {}".format(config.changed_rate))
+                rate = config.changed_rate
 
-            ### Train Discriminator ###
-            # Discriminator A Loss #
-            loss_real_D_A = criterion_GAN(real_out_A, real_labels)
-            loss_fake_D_A = criterion_GAN(fake_out_A, fake_labels)
+            G_loss_A = (G_adv_loss_A*0.1 + G_feature_loss_A*0.9) * (1.-rate) + G_recon_loss_A * rate
+            G_loss_B = (G_adv_loss_B*0.1 + G_feature_loss_B*0.9) * (1.-rate) + G_recon_loss_B * rate
 
-            loss_D_A = (loss_real_D_A + loss_fake_D_A).mean()
-
-            # Discriminator B Loss #
-            loss_real_D_B = criterion_GAN(real_out_B, real_labels)
-            loss_fake_D_B = criterion_GAN(fake_out_B, fake_labels)
-
-            loss_D_B = (loss_real_D_B + loss_fake_D_B).mean()
-
-            # Total Discriminator Loss #
-            loss_D = loss_D_A + loss_D_B
-
-            # Back Propagation and Update
-            loss_D.backward(retain_graph=True)
-            optim_D.step()
-
-            ### Train Generator ###
-            # Reconstruction Loss #
-            loss_recon_G_A = criterion_Recon(fake_ABA, real_A)
-            loss_recon_G_B = criterion_Recon(fake_BAB, real_B)
-
-            # GAN Loss #
-            loss_gan_G_A = criterion_GAN(fake_out_A, real_labels)
-            loss_gan_G_B = criterion_GAN(fake_out_B, real_labels)
-
-            # Feature Loss #
-            loss_feature_G_A = loss_feature(real_features_A, fake_features_A, criterion_Feature)
-            loss_feature_G_B = loss_feature(real_features_B, fake_features_B, criterion_Feature)
-
-            # Generator A and Generator B Loss #
-            loss_G_A = loss_recon_G_A*0.01 + (loss_gan_G_A*0.1 + loss_feature_G_A*0.9)*0.99
-            loss_G_B = loss_recon_G_B*0.01 + (loss_gan_G_B*0.1 + loss_feature_G_B*0.9)*0.99
-
-            # Total Generator Loss #
-            loss_G = loss_G_A + loss_G_B
+            # Calculate Total Generator Loss #
+            G_loss = G_loss_A + G_loss_B
 
             # Back Propagation and Update #
-            loss_G.backward(retain_graph=True)
-            optim_G.step()
+            if iters % config.num_train_gen == 0:
+                D_loss.backward()
+                D_optim.step()
+            else:
+                G_loss.backward()
+                G_optim.step()
 
-            ### Print Statistics ###
-            if (i+1) % 100 == 0:
+            # Add items to Lists #
+            D_losses.append(D_loss.item())
+            G_losses.append(G_loss.item())
+
+            ####################
+            # Print Statistics #
+            ####################
+
+            if (i+1) % config.print_every == 0:
                 print("DiscoGAN | Epochs [{}/{}] | Iterations [{}/{}] | D Loss {:.4f} | G Loss {:.4f}"
-                      .format(epoch+1, num_epochs, i+1, total_batch, loss_D.item(), loss_G.item()))
+                      .format(epoch + 1, config.num_epochs, i + 1, total_batch, np.average(D_losses), np.average(G_losses)))
 
-                losses_D.append(loss_D.item())
-                losses_G.append(loss_G.item())
+                # Save Sample Images #
+                sample_images(val_loader, G_A2B, G_B2A, epoch, config.samples_path)
 
-    # Save Images #
-        sample_images(val_loader, epoch, G_A2B, G_B2A, results_path)
+            iters += 1
 
-    make_gifs_train("DiscoGAN", results_path)
-    plot_losses(losses_D, losses_G, num_epochs, results_path)
+        # Adjust Learning Rate #
+        D_optim_scheduler.step()
+        G_optim_scheduler.step()
 
-    # Save Models #
-    torch.save(D_A.state_dict(), './data/results/DiscoGAN_Discriminator_A.pkl')
-    torch.save(D_B.state_dict(), './data/results/DiscoGAN_Discriminator_B.pkl')
-    torch.save(G_A2B.state_dict(), './data/results/DiscoGAN_Generator_A2B.pkl')
-    torch.save(G_B2A.state_dict(), './data/results/DiscoGAN_Generator_B2A.pkl')
+        # Save Model Weights #
+        if (epoch + 1) % config.save_every == 0:
+            torch.save(G_A2B.state_dict(), os.path.join(config.weights_path, 'DiscoGAN_Generator_A2B_Epoch_{}.pkl'.format(epoch+1)))
+            torch.save(G_B2A.state_dict(), os.path.join(config.weights_path, 'DiscoGAN_Generator_B2A_Epoch_{}.pkl'.format(epoch+1)))
+
+    # Make a GIF file #
+    make_gifs_train('DiscoGAN', config.samples_path)
+
+    # Plot Losses #
+    plot_losses(D_losses, G_losses, config.num_epochs, config.plots_path)
 
     print("Training finished.")
 
 
 if __name__ == "__main__":
-    torch.cuda.empty_cache()
-
-    batch_size = 32
-    num_epochs = 40
-    train(batch_size, num_epochs)
+    train()
