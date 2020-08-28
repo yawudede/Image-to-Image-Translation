@@ -40,7 +40,7 @@ python inference.py
 ```
 
 ### 2. Sample Generated During Training
-<img src = './1. Pix2Pix/results/samples/Pix2Pix_Facades_Epoch_200.png'>
+<img src = './results/samples/Pix2Pix_Facades_Epoch_200.png'>
 
 ### 3. Loss Plots
-<img src = './1. Pix2Pix/results/plots/Pix2Pix_Losses_Over_Epoch_of_200.png'>
+<img src = './results/plots/Pix2Pix_Losses_Over_Epoch_of_200.png'>
