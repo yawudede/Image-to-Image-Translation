@@ -36,7 +36,7 @@ python inference.py
 ```
 
 ### 2. Sample Generated During Training
-<img src = './results/samples/BicycleGAN_Losses_Epoch_1.png'>
+<img src = './results/samples/BicycleGAN_Edges2Handbags_Epoch_001.png'>
 
 ### 3. Loss Plots
 <img src = './results/plots/BicycleGAN_Losses_Epoch_1.png'>
