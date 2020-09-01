@@ -9,18 +9,18 @@
 sh download_dataset.sh edges2handbags
 ```
 #### 2) Directory
-Check the directory corresponds to the following.
+Check if the directory corresponds to the following:
 ```
 +---[data]
 |   \---[edges2handbags]
 |       \----[test]
-|               +---[]
+|               +---[1_AB.jpg]
 |               |...
-|               +---[]
+|               +---[138567_AB.jpg]
 |       \---[train]
-|               +---[]
-|               ...
-|               +---[]
+|               +---[1_AB.jpg]
+|               |...
+|               +---[200_AB.jpg]
 +---config.py
 +---download_dataset.sh
 |   ...
@@ -38,5 +38,5 @@ python inference.py
 ### 2. Sample Generated During Training
 <img src = './results/samples/BicycleGAN_Edges2Handbags_Epoch_001.png'>
 
-### 3. Loss Plots
+### 3. Loss During Train Process
 <img src = './results/plots/BicycleGAN_Losses_Epoch_1.png'>
