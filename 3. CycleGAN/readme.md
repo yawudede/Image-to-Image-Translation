@@ -13,26 +13,26 @@
 sh download_dataset.sh horse2zebra
 ```
 #### 2) Directory
-Check the directory corresponds to the following.
+Check if the directory corresponds to the following:
 ```
 +---[data]
 |   \---[horse2zebra]
 |       \----[testA]
-|               +---[]
+|               +---[n02381460_20.jpg]
 |               |...
-|               +---[]
+|               +---[n02381460_9260.jpg]
 |       \----[testB]
-|               +---[]
+|               +---[n02391049_80.jpg]
 |               |...
-|               +---[]
+|               +---[n02391049_10980.jpg]
 |       \---[trainA]
-|               +---[]
+|               +---[n02381460_2.jpg]
 |               ...
-|               +---[]
+|               +---[n02381460_9263.jpg]
 |       \---[trainB]
-|               +---[]
+|               +---[n02391049_2.jpg]
 |               ...
-|               +---[]
+|               +---[n02391049_11195.jpg]
 +---config.py
 +---download_dataset.sh
 |   ...
@@ -51,5 +51,5 @@ python inference.py
 Two Real Images | Two Generated Images | Two Reconstructed Images 
 <img src = './results/samples/CycleGAN_Horse2Zebra_Epoch_077.png'>
 
-### 3. Loss Plots
+### 3. Loss During Train Process
 <img src = './results/plots/CycleGAN_Losses_Epoch_50.png'>
