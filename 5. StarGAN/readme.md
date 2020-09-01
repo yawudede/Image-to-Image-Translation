@@ -9,14 +9,14 @@
 sh download_dataset.sh
 ```
 #### 2) Directory
-Check the directory corresponds to the following.
+Check if the directory corresponds to the following:
 ```
 +---[data]
 |   \---[celeba]
 |       \----[images]
-|               +---[]
+|               +---[000001.jpg]
 |               |...
-|               +---[]
+|               +---[202599.jpg]
 |       +---[list_attr_celeba.txt]
 +---config.py
 +---download_dataset.sh
@@ -35,5 +35,5 @@ python inference.py
 ### 2. Sample Generated During Training
 <img src = './results/samples/StarGAN_Aligned_CelebA_Epoch_010.png'>
 
-### 3. Loss Plots
+### 3. Loss During Train Process
 <img src = './results/plots/StarGAN_Losses_Epoch_10.png'>
