@@ -14,17 +14,17 @@ Check the directory corresponds to the following.
 +---[data]
 |   \---[facades]
 |       \----[test]
-|               +---[]
+|               +---[1.jpg]
 |               |...
-|               +---[]
+|               +---[106.jpg]
 |       \---[train]
-|               +---[]
+|               +---[1.jpg]
 |               ...
-|               +---[]
+|               +---[400.jpg]
 |       \---[val]
-|               +---[]
+|               +---[1.jpg]
 |               ...
-|               +---[]
+|               +---[100.jpg]
 +---config.py
 +---download_dataset.sh
 |   ...
@@ -42,5 +42,5 @@ python inference.py
 ### 2. Sample Generated During Training
 <img src = './results/samples/Pix2Pix_Facades_Epoch_200.png'>
 
-### 3. Loss Plots
+### 3. Loss During Train Process
 <img src = './results/plots/Pix2Pix_Losses_Over_Epoch_of_200.png'>
