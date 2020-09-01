@@ -27,11 +27,11 @@ Check if the directory corresponds to the following:
 |               +---[n02391049_10980.jpg]
 |       \---[trainA]
 |               +---[n02381460_2.jpg]
-|               ...
+|               |...
 |               +---[n02381460_9263.jpg]
 |       \---[trainB]
 |               +---[n02391049_2.jpg]
-|               ...
+|               |...
 |               +---[n02391049_11195.jpg]
 +---config.py
 +---download_dataset.sh
