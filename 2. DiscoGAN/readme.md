@@ -9,18 +9,18 @@
 sh download_dataset.sh edges2shoes
 ```
 #### 2) Directory
-Check the directory corresponds to the following.
+Check if the directory corresponds to the following:
 ```
 +---[data]
 |   \---[edges2shoes]
 |       \----[train]
-|               +---[]
+|               +---[1_AB.jpg]
 |               |...
-|               +---[]
+|               +---[49825_AB.jpg]
 |       \---[val]
-|               +---[]
+|               +---[1_AB.jpg]
 |               ...
-|               +---[]
+|               +---[200_AB.jpg]
 +---config.py
 +---download_dataset.sh
 |   ...
@@ -38,5 +38,5 @@ python inference.py
 ### 2. Sample Generated During Training
 <img src = './results/samples/DiscoGAN_Edges2Shoes_Epoch_100.png'>
 
-### 3. Loss Plots
+### 3. Loss During Train Process
 <img src = './results/plots/DiscoGAN_Losses_Epoch_100.png'>
