@@ -21,7 +21,6 @@ def inference():
     # Prepare Generator #
     G = Generator(num_classes=len(config.selected_attrs)).to(device)
     G.load_state_dict(torch.load(os.path.join(config.weights_path, 'StarGAN_Generator_Epoch_{}.pkl'.format(config.num_epochs))))
-    G.eval()
 
     # Test #
     print("StarGAN | Generating Aligned CelebA Images started...")
