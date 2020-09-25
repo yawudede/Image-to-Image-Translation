@@ -1,7 +1,7 @@
 # Implementations of Image to Image Translation via Generative Models using PyTorch
 
 ### 0. Introduction
-This repository contains implementations of fundamental Image-to-Image Translation via Generative Models, including Pix2Pix, DiscoGAN, CycleGAN, BicycleGAN, and StarGAN. </br>
+This repository contains implementations of fundamental Image-to-Image Translation via Generative Models, including Pix2Pix, DiscoGAN, CycleGAN, BicycleGAN, and StarGAN, Unsupervised Attention-Guided GAN, and MUNIT. </br>
 <br> Please note that I focused on implementation rather than deriving the best results. In other words, a set of hyper-parameters that I used may not produce the best results. For example, you can expect better CycleGAN results when increasing total epochs to 200.
 
 <img src = './Introduction.PNG'>
@@ -32,6 +32,15 @@ This repository contains implementations of fundamental Image-to-Image Translati
 
 <img src = './6. Unsupervised Attention-Guided GAN/results/inference/Horse2Zebra/UAG-GAN_Horse2Zebra_Results_031.png'>
 <img src = './6. Unsupervised Attention-Guided GAN/results/inference/Zebra2Horse/UAG-GAN_Zebra2Horse_Results_024.png'>
+
+
+### 6. [Unsupervised Attention-Guided GAN](https://github.com/hee9joon/Image-to-Image-Translation/tree/master/6.%20Unsupervised%20Attention-Guided%20GAN)
+
+<img src = './6. Unsupervised Attention-Guided GAN/results/inference/Horse2Zebra/UAG-GAN_Horse2Zebra_Results_031.png'>
+<img src = './6. Unsupervised Attention-Guided GAN/results/inference/Zebra2Horse/UAG-GAN_Zebra2Horse_Results_024.png'>
+
+### 7. [MUNIT](https://github.com/hee9joon/Image-to-Image-Translation/tree/master/7.%20MUNIT)
+- results to be added.
 
 ### Development Environment
 - Ubuntu 18.04 LTS
