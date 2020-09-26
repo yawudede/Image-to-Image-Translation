@@ -5,7 +5,7 @@
 <img src = './results/inference/random/MUNIT_Edges2Shoes_Random_Results_025.png'>
 
 #### 2) Example Guided Image Translation
-<img src = './results/inference/ex_guided/MUNIT_Edges2Shoes_Ex_Guided_Results_025.png'>
+<img src = './results/inference/ex_guided/MUNIT_Edges2Shoes_Ex_Guided_Results_007.png'>
 
 ### 1. Run the Codes
 #### 1) Download Datasets
@@ -48,8 +48,8 @@ python inference.py
 python inference.py --style 'Ex_Guided'
 ```
 
-### 2. Sample Generated During Training (Only Random Generation)
-<img src = './results/samples/MUNIT_Epoch_010.png'>
+### 2. Sample Generated During Training (Random Generation)
+<img src = './results/samples/MUNIT_Epoch_020.png'>
 
 ### 3. Loss During Train Process
-<img src = './results/plots/MUNIT_Losses_Epoch_10.png'>
+<img src = './results/plots/MUNIT_Losses_Epoch_20.png'>

@@ -84,8 +84,8 @@ def denorm(x):
 def sample_images(data_loader_1, data_loader_2, generator_1, generator_2, fixed_style_A, fixed_style_B, epoch, path):
     """Save Sample Images for Every Epoch"""
 
-    generator_2.eval()
     generator_1.eval()
+    generator_2.eval()
 
     real_A = next(iter(data_loader_1))
     real_B = next(iter(data_loader_2))
@@ -150,7 +150,7 @@ def make_gifs_train(title, path):
     generated_images = []
 
     for i in range(len(images)):
-        file = os.path.join(path, '%s_Edges2Shoes_Epoch_%03d.png.png' % (title, i+1))
+        file = os.path.join(path, '%s_Edges2Shoes_Epoch_%03d.png' % (title, i+1))
         generated_images.append(imageio.imread(file))
 
     imageio.mimsave(path + '{}_Train_Results.gif'.format(title), generated_images, fps=2)

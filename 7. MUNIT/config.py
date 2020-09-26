@@ -22,7 +22,7 @@ parser.add_argument('--plots_path', type=str,  default='./results/plots/', help=
 parser.add_argument('--inference_random_path', type=str, default='./results/inference/random/', help='inference path for random generation')
 parser.add_argument('--inference_ex_guided_path', type=str, default='./results/inference/ex_guided/', help='inference path for example-guided generation')
 
-parser.add_argument('--num_epochs', type=int, default=10, help='total epoch')
+parser.add_argument('--num_epochs', type=int, default=20, help='total epoch')
 parser.add_argument('--print_every', type=int, default=100, help='print statistics for every default iteration')
 parser.add_argument('--save_every', type=int, default=5, help='save model weights for every default epoch')
 
