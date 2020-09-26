@@ -34,7 +34,8 @@ This repository contains implementations of fundamental Image-to-Image Translati
 <img src = './6. Unsupervised Attention-Guided GAN/results/inference/Zebra2Horse/UAG-GAN_Zebra2Horse_Results_024.png'>
 
 ### 7. [MUNIT : Multimodal Unsupervised Image-to-Image Translation](https://github.com/hee9joon/Image-to-Image-Translation/tree/master/7.%20MUNIT)
-- results to be added.
+
+<img src = './7. MUNIT/results/inference/ex_guided/MUNIT_Edges2Shoes_Ex_Guided_Results_007.png'>
 
 ### Development Environment
 ```
