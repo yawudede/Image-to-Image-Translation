@@ -49,7 +49,7 @@ python inference.py --style 'Ex_Guided'
 ```
 
 ### 2. Sample Generated During Training (Random Generation)
-<img src = './results/samples/MUNIT_Epoch_020.png'>
+<img src = './results/samples/MUNIT_Edges2Shoes_Epoch_020.png'>
 
 ### 3. Loss During Train Process
 <img src = './results/plots/MUNIT_Losses_Epoch_20.png'>
