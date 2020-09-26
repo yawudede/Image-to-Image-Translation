@@ -4,7 +4,7 @@
 This repository contains implementations of fundamental Image-to-Image Translation via Generative Models, including Pix2Pix, DiscoGAN, CycleGAN, BicycleGAN, and StarGAN, Unsupervised Attention-Guided GAN, and MUNIT. </br>
 <br> Please note that I focused on implementation rather than deriving the best results. In other words, a set of hyper-parameters that I used may not produce the best results. For example, you can expect better CycleGAN results when increasing total epochs to 200.
 
-<img src = './Introduction.PNG'>
+<img src = './Intro.PNG'>
 
 ### 1. [Pix2Pix : Image-to-Image Translation with Conditional Adversarial Networks](https://github.com/hee9joon/Image-to-Image-Translation/tree/master/1.%20Pix2Pix)
 
