@@ -1,6 +1,6 @@
 ## MUNIT : [Multimodal Unsupervised Image-to-Image Translation](https://arxiv.org/abs/1804.04732)
 
-### 0. Inference Result (After x Epochs)
+### 0. Inference Result (After 20 Epochs)
 #### 1) Random Image Translation
 <img src = './results/inference/random/MUNIT_Edges2Shoes_Random_Results_025.png'>
 
@@ -49,7 +49,7 @@ python inference.py --style 'Ex_Guided'
 ```
 
 ### 2. Sample Generated During Training (Random Generation)
-<img src = './results/samples/MUNIT_Edges2Shoes_Epoch_020.png'>
+<img src = './results/samples/MUNIT_Epoch_020.png'>
 
 ### 3. Loss During Train Process
 <img src = './results/plots/MUNIT_Losses_Epoch_20.png'>
