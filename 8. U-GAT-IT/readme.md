@@ -1,5 +1,4 @@
-## CycleGAN : [U-GAT-IT: Unsupervised Generative Attentional Networks with Adaptive Layer-Instance Normalization for Image-to-Image Translation
-](https://arxiv.org/abs/1611.07004)
+## U-GAT-IT : [U-GAT-IT: Unsupervised Generative Attentional Networks with Adaptive Layer-Instance Normalization for Image-to-Image Translation](https://arxiv.org/abs/1611.07004)
 
 ### 0. Inference Result (After 50 Epochs)
 #### 1) Selfie -> Anime
