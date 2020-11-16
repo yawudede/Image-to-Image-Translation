@@ -37,7 +37,7 @@ This repository contains implementations of fundamental Image-to-Image Translati
 
 <img src = './7. MUNIT/results/inference/ex_guided/MUNIT_Edges2Shoes_Ex_Guided_Results_007.png'>
 
-### 8. [U-GAT-IT: Unsupervised Generative Attentional Networks with Adaptive Layer-Instance Normalization for Image-to-Image Translation](https://arxiv.org/abs/1611.07004)
+### 8. [U-GAT-IT: Unsupervised Generative Attentional Networks with Adaptive Layer-Instance Normalization for Image-to-Image Translation](https://github.com/hee9joon/Image-to-Image-Translation/tree/master/8.%20U-GAT-IT)
 
 <img src = './8. U-GAT-IT/results/samples/U-GAT-IT_Samples_Epoch_049.png'>
 
