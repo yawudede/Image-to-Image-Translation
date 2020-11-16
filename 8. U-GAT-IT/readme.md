@@ -2,7 +2,6 @@
 
 ### 0. Inference Result (After 50 Epochs)
 #### 1) Selfie -> Anime
-<img src = './results/inference/U-GAT-IT_Selfie2Anime_Results_013.png'>
 <img src = './results/inference/U-GAT-IT_Selfie2Anime_Results_042.png'>
 <img src = './results/inference/U-GAT-IT_Selfie2Anime_Results_100.png'>
 
