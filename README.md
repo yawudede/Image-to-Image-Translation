@@ -1,10 +1,38 @@
 # Implementations of Image to Image Translation via Generative Models using PyTorch
 
 ### 0. Introduction
-This repository contains implementations of fundamental Image-to-Image Translation via Generative Models, including Pix2Pix, DiscoGAN, CycleGAN, BicycleGAN, and StarGAN, Unsupervised Attention-Guided GAN, and MUNIT. </br>
+This repository contains implementations of fundamental Image-to-Image Translation via Generative Models, including Pix2Pix, DiscoGAN, CycleGAN, BicycleGAN, and StarGAN, Unsupervised Attention-Guided GAN, MUNIT, and U-GAT-IT. </br>
 <br> Please note that I focused on implementation rather than deriving the best results. In other words, a set of hyper-parameters that I used may not produce the best results. For example, you can expect better CycleGAN results when increasing total epochs to 200.
 
-<img src = './Intro.PNG'>
+<table>
+       <thead>
+           <tr>
+               <th>Method</th>
+               <th>Modality</th>
+               <th>Papers</th>
+           </tr>
+       </thead>
+       <tbody>
+           <tr>
+               <td rowspan=2>Supervised Learning</td>
+               <td>Uni-modal</td>
+               <td>Pix2Pix</td>
+           </tr>
+           <tr>
+               <td>Multi-modal</td>
+               <td>BicycleGAN</td>
+           </tr>
+           <tr>
+               <td rowspan=2>Unsupervised Learning</td>
+               <td>Uni-modal</td>
+               <td>DiscoGAN & CycleGAN & UAG-GAN & U-GAT-IT</td>
+           </tr>
+           <tr>
+               <td>Multi-modal</td>
+               <td>StarGAN & MUNIT</td>
+           </tr>
+       </tbody>
+</table>
 
 ### 1. [Pix2Pix : Image-to-Image Translation with Conditional Adversarial Networks](https://github.com/hee9joon/Image-to-Image-Translation/tree/master/1.%20Pix2Pix)
 
